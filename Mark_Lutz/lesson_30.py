@@ -14,7 +14,7 @@
 #  5) Перегрузка реализуется за счет предоставления особым образом именнованных 
 #     методов в классе.   
 
-# Конструкторы и выражения: __init__ и __sub__
+#---------------------- Конструкторы и выражения: __init__ и __sub__ -------------------------#
 
 # __init__  применяется для инициализации вновь созданного объекта экземпляра с
 # использованием любых аргуметов, указываемых после имени класса
@@ -30,6 +30,52 @@ class Number:
 
 x = Number(5)
 y = x - 2 
-print(y.data)  # 3   
+#print(y.data)  # 3   
 
-      
+#-------------------------------- Индексирование и нарезание: --------------------------------#
+# __getitem__ и __setitem__
+
+class Indexer:
+    def __getitem__(self, index):
+        return index ** 2
+
+a = Indexer()
+print(a[2]) # 4
+
+class Indexer:
+    data = [5, 6, 7, 8, 9]
+    def __getitem__(self, index):
+        print('getitem:', index)
+        return self.data[index]
+
+a = Indexer()
+print(a[0])   
+#  getitem: 0
+#  5
+print(a[1])
+# getitem: 1
+# 6
+print(a[-1]) 
+# getitem: -1
+# 9       
+print(a[2:4])
+# getitem: slice(2, 4, None)
+# [7, 8]
+
+class Indexer:
+    def __getitem__(self, index):
+        if isinstance(index, int):
+            print('indexing', index)
+        else:
+            print('slicing', index.start, index.stop, index.step)    
+
+A = Indexer()
+print(A[99]) 
+# indexing 99 
+# None
+print(A[1:99:2]) 
+# slicing 1 99 2
+# None
+print(A[1:]) 
+# slicing 1 None None
+# None         
