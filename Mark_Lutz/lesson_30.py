@@ -79,3 +79,79 @@ print(A[1:99:2])
 print(A[1:]) 
 # slicing 1 None None
 # None         
+
+#-------------------------Итерация по индексам: __getitem__ ----------------------------------#
+
+class StepperIndex: 
+    def __getitem__(self, i): #без него 'StepperIndex' object is not subscriptable
+        return self.data[i]
+
+SI = StepperIndex()
+SI.data = 'Spam'
+
+print(SI[3])
+for item in SI:
+    print(item, end=' ')
+
+#---------------------------------Членство: __contains__, __iter__, __getitem__---------------#
+
+class  Iters:
+    def __init__(self, value):
+        self.data = value
+
+    def __getitem__(self, i):
+        print('get[%s]:' % i, end='') #Запасной вариант для итерации
+        return self.data[i]    # Также для индексирования, нарезания
+
+    def __iter__(self): #Предпочтительнее для итерации
+        print('iter=> ', end='') # Допускает только один активный итератор
+        self.ix = 0
+        return self
+
+    def __next__(self):
+        print('next:', end='')
+        if self.ix == len(self.data): raise StopIteration
+        item = self.data[self.ix]
+        self.ix += 1
+        return item
+
+    def __contains__(self, x): #Предпочтительнее для операции in
+        print('contains: ', end='')
+        return x in self.data
+
+I = Iters([1, 2, 3, 4, 5])
+print(3 in I)
+for i in I:
+    print(i, end=' | ') 
+print()
+print([i ** 2 for i in I])
+print(list(map(bin, I)))       
+It = iter(I)
+
+while True:
+    try:
+        print(next(It), end=' @ ')
+        print(I.__dict__)
+        print(It.__dict__)
+    except StopIteration:
+        break
+
+#----------------------Доступ к атрибутам: __getattr__ и __setattr__ -------------------------#
+
+#Лучший способ в 39 главе
+
+#---------------------Строковое представление: __repr__, __str__ -----------------------------#
+
+# * Метод __str__ сначала опробуется для операции print  и встроенной функции str(внутренний 
+#   эквивалент которой запускает операция print). В общем случае он должен возвратить отображение,
+#   дружественное пользователю.
+
+# * Метод __repr__ используется во всех остальных контекстах: для эхо-вывода в интерактивной подсказке
+#   функции repr и вложеных появлений, а также print и str, если метод __str__ осутствует. В общем случае
+#   он должен возвратить строку как в коде, которую можно было бы применить для воссоздания объекта,
+#   или детальное отображение для разработчиков
+
+
+
+
+      
